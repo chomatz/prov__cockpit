@@ -1,2 +1,36 @@
 ---
-# tasks file for prov__cockpit
+
+- name: ensure tasks run only on selected os releases
+  block:
+
+    - name: install cockpit packages
+      ansible.builtin.package:
+        name: "{{ cockpit.packages }}"
+        state: present
+
+    - name: disable system user access on cockpit
+      community.general.pamd:
+        name: cockpit
+        type: auth
+        control: required
+        module_path: pam_listfile.so
+        new_type: auth
+        new_control: requisite
+        new_module_path: pam_succeed_if.so
+        module_arguments: 'uid >= 1000'
+        state: before
+
+    - name: expose cockpit traffic
+      ansible.posix.firewalld:
+        service: cockpit
+        immediate: true
+        permanent: true
+        state: enabled
+
+  when: >
+    ansible_distribution == "CentOS" or
+    ansible_distribution == "Fedora" or
+    ansible_distribution == "RedHat" or
+    ansible_distribution == "Rocky"
+
+...

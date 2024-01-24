@@ -1,2 +1,7 @@
 ---
-# vars file for prov__cockpit
+
+cockpit:
+  packages:
+    - cockpit
+
+...
