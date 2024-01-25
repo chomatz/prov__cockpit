@@ -27,6 +27,15 @@
         permanent: true
         state: enabled
 
+    - name: start cockpit
+      ansible.builtin.service:
+        name: "{{ item }}"
+        state: started
+        enabled: true
+      with_items:
+        - cockpit.service
+        - cockpit.socket
+
   when: >
     ansible_distribution == "CentOS" or
     ansible_distribution == "Fedora" or
