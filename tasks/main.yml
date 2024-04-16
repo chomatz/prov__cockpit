@@ -29,12 +29,9 @@
 
     - name: start cockpit
       ansible.builtin.service:
-        name: "{{ item }}"
+        name: cockpit.socket
         state: started
         enabled: true
-      with_items:
-        - cockpit.service
-        - cockpit.socket
 
   when: >
     ansible_distribution == "CentOS" or
